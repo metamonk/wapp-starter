@@ -1,6 +1,8 @@
 **# Project Overview**
 
-This is a Solana wallet transaction tracking application designed to provide users with a comprehensive view of financial activities across a curated set of cryptocurrency wallets. The platform enables administrators to manage a watchlist of wallets and allows authenticated users to monitor and analyze transaction feeds.
+You are building a Solana wallet transaction tracking application designed to provide users with a comprehensive view of financial activities across a curated set of cryptocurrency wallets. The platform enables administrators to manage a watchlist of wallets and allows authenticated users to monitor and analyze transaction feeds.
+
+You will be using NextJS 15, shadcn, tailwind, and lucide icons.
 
 **# Core Functionality**
 - The feed is a sorted list that contains all trades specific Solana wallets have.
@@ -35,6 +37,45 @@ This is a Solana wallet transaction tracking application designed to provide use
 
 **# Doc**
 
+🔹 Frontend Layer
+- React/Next.js application
+- User authentication
+- Wallet connection (Phantom/Solflare)
+
+🔹 Backend Services
+- Typescript/Node.js microservices
+- Authentication middleware
+- Rate limiting
+- Transaction indexing
+
+🔹 Data Ingestion Pipeline
+- Solana RPC websocket connections
+- Real-time transaction streaming
+- Block parsing mechanisms
+- Event-driven architecture
+
+🔹 Data Storage
+- PostgreSQL for user/wallet metadata
+- TimescaleDB for time-series transaction data
+- Redis for caching/performance
+
+🔹 Blockchain Data Handlers
+- Transaction type classification
+- Token transfer tracking
+- Balance calculation
+- Historical portfolio reconstruction
+
+🔹 Monitoring & Scaling
+- Prometheus metrics
+- Elastic scaling
+- Redundant RPC providers
+- Error/performance logging
+
+Key Integration Points:
+- Alchemy for primary RPC
+- Background workers for async processing
+- WebSocket real-time updates
+- Secure key management
 
 **# Current File Structure**
 
