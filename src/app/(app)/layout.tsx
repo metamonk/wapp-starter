@@ -1,11 +1,18 @@
+import { getTokensFromCookies } from "@/lib/auth"
 import TrpcProvider from "@/lib/trpc/Provider";
-import { cookies } from "next/headers";
+
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return ( <main>
-<TrpcProvider cookies={cookies().toString()}>{children}</TrpcProvider>
-</main> )
+  const { token } = await getTokensFromCookies();
+  
+  return (
+    <main>
+      <TrpcProvider cookies={token ?? ""}>
+        {children}
+      </TrpcProvider>
+    </main>
+  );
 }

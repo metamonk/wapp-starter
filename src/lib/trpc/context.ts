@@ -1,12 +1,12 @@
 import { db } from "@/lib/db/index"
- // import { getUserAuth } from "@/lib/auth/utils";
+import { authenticateRequest } from "@/lib/auth/privy"
 
 export async function createTRPCContext(opts: { headers: Headers }) {
- // const { session } = await getUserAuth();
+  const user = await authenticateRequest();
 
   return {
     db,
-    //  session: session,
+    user,
     ...opts,
   }
 }

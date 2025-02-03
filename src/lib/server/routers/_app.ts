@@ -1,8 +1,12 @@
-import { computersRouter } from "./computers";
 import { router } from "@/lib/server/trpc";
+import { usersRouter } from "./users";
+import { trackedWalletsRouter } from "./trackedWallets";
+import { transactionsRouter } from "./transactions";
 
 export const appRouter = router({
-  computers: computersRouter,
+  users: usersRouter,
+  trackedWallets: trackedWalletsRouter,
+  transactions: transactionsRouter,
 });
 
 export type AppRouter = typeof appRouter;

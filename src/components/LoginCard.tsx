@@ -1,0 +1,33 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { usePrivy } from "@privy-io/react-auth";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function LoginCard() {
+  const { ready, authenticated, login } = usePrivy();
+
+  const disableLogin = !ready || (ready && authenticated);
+
+  const handleLogin = () => {
+    if (!authenticated) {
+      login()
+    }
+  }
+
+  return (
+    <Card className="w-[300px]">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-center text-muted-foreground">Click the button below to log in</p>
+      </CardContent>
+      <CardFooter>
+        <Button disabled={disableLogin} className="w-full" onClick={handleLogin}>
+          Login
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}

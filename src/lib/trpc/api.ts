@@ -1,6 +1,5 @@
 import "server-only";
 
-  //  import { getUserAuth } from "@/lib/auth/utils";
 import { appRouter } from "@/lib/server/routers/_app";
 import { env } from "@/lib/env.mjs";
 import { createTRPCContext } from "./context";
@@ -19,10 +18,11 @@ import { cookies } from "next/headers";
 
 import SuperJSON from "superjson";
 
-const createContext = cache(() => {
+const createContext = cache(async () => {
+  const cookieStore = await cookies();
   return createTRPCContext({
     headers: new Headers({
-      cookie: cookies().toString(),
+      cookie: cookieStore.toString(),
       "x-trpc-source": "rsc",
     }),
   });
