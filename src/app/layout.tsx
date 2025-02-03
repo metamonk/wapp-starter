@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "O.C.K.E.",
-  description: "Onchain Kinetic Evaluator",
+  title: "WAPP",
+  description: "Web3 App Starter Template",
 };
 
 export default async function RootLayout({
