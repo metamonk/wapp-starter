@@ -1,5 +1,5 @@
 import { privyClient } from "./privy";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { User } from "@privy-io/server-auth";
 
 /**
@@ -41,3 +41,7 @@ export const getUserAuth = async (): Promise<{ user: User | null }> => {
   }
 }
 
+export async function getPathname(): Promise<string> {
+  const headersList = await headers();
+  return headersList.get("x-pathname") || headersList.get("x-invoke-path") || "";
+}

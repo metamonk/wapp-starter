@@ -1,8 +1,6 @@
 import { getTokensFromCookies } from "@/lib/auth"
 import TrpcProvider from "@/lib/trpc/Provider";
-import { getUserAuth } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { validateAuthRoute } from "@/lib/auth/server"
+import { validateAuthRoute } from "@/lib/auth/guard"
 
 export default async function AppLayout({
   children,
@@ -10,7 +8,7 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   await validateAuthRoute();
-  
+
   const { privyToken } = await getTokensFromCookies();
   return (
     <main>

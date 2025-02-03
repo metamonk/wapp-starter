@@ -1,9 +1,6 @@
 import { getTokensFromCookies } from "@/lib/auth"
 import TrpcProvider from "@/lib/trpc/Provider";
-import { redirect } from "next/navigation"
-import { getUserAuth } from "@/lib/auth"
-import { api } from "@/lib/trpc/api"
-import { validateProtectedRoute } from "@/lib/auth/server"
+import { validateProtectedRoute } from "@/lib/auth/guard"
 
 export default async function AppLayout({
   children,
