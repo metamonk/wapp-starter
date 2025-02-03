@@ -19,9 +19,11 @@ export const insertUserParams = baseSchema.extend({
 export const updateUserSchema = baseSchema;
 export const updateUserParams = updateUserSchema.extend({
   walletAddress: z.string().min(1),
-  privyId: z.string().min(1)
+  privyId: z.string().min(1),
+  isAdmin: z.boolean()
 })
 export const userIdSchema = baseSchema.pick({ id: true });
+export const privyIdSchema = baseSchema.pick({ privyId: true });
 
 // Types for users - used to type API request params and within Components
 export type User = z.infer<typeof userSchema>;
@@ -29,7 +31,7 @@ export type NewUser = z.infer<typeof insertUserSchema>;
 export type NewUserParams = z.infer<typeof insertUserParams>;
 export type UpdateUserParams = z.infer<typeof updateUserParams>;
 export type UserId = z.infer<typeof userIdSchema>["id"];
-    
+export type PrivyId = z.infer<typeof privyIdSchema>["privyId"];
 // this type infers the return from getUsers() - meaning it will include any joins
 export type CompleteUser = Awaited<ReturnType<typeof getUsers>>["users"][number];
 

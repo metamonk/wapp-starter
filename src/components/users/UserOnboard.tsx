@@ -1,23 +1,9 @@
 "use client";
 
 import { User } from "@privy-io/server-auth";
-import { NewUserParams, insertUserParams } from "@/lib/db/schema/users"
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { NewUserParams } from "@/lib/db/schema/users"
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -26,20 +12,8 @@ const UserOnboard = ({
 }: {
   user: User;
 }) => {
-
   const router = useRouter();
   const utils = trpc.useUtils();
-
-  const form = useForm<z.infer<typeof insertUserParams>>({
-    // latest Zod release has introduced a TS error with zodResolver
-    // open issue: https://github.com/colinhacks/zod/issues/2663
-    // errors locally but not in production
-    resolver: zodResolver(insertUserParams),
-		defaultValues: {
-			privyId: user.id,
-     	walletAddress: user.wallet?.address,
-    },
-  });
 
   const onSuccess = async (action: "create" | "update" | "delete",
     data?: { error?: string },
@@ -49,8 +23,8 @@ const UserOnboard = ({
       return;
     }
     await utils.users.getUsers.invalidate();
-    router.refresh();
-    toast.success(`User ${action}d!`);
+    router.push("/dashboard");
+    toast.success(`Welcome!`);
   };
 
   const onError = async (action: "create" | "update" | "delete", data: { error: string }) => {

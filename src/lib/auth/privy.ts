@@ -13,15 +13,15 @@ export const privyClient = new PrivyClient(
  * @returns The authenticated user or throws an error if authentication fails.
  */
 export async function authenticateRequest() {
-  const { token } = await getTokensFromCookies();
+  const { privyToken } = await getTokensFromCookies();
 
-  if (!token) {
+  if (!privyToken) {
     console.warn('No token provided');
     return null; // Return null if no token is provided
   }
 
   try {
-    const user = await privyClient.verifyAuthToken(token);
+    const user = await privyClient.verifyAuthToken(privyToken);
     return user;
   } catch (error) {
     console.error('Failed to verify token:', error);

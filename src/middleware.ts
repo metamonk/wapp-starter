@@ -1,28 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { authenticateRequest } from '@/lib/auth';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Add the pathname to headers for use in validateAuthAndRedirect
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
 
-  // Allow access to the home page without authentication
-  if (pathname === '/' || pathname === '/login') {
-    return NextResponse.next();
-  }
-  
-  try {
-    const user = await authenticateRequest();
-  
-    if (user) {
-      // Attach user to request if needed
-      request.headers.set('x-user-id', user.userId);
-    }
-    
-    return NextResponse.next();
-  } catch (error) {
-    console.error('Authentication error:', error);
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

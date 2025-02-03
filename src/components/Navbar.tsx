@@ -1,55 +1,138 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { AlignRight } from "lucide-react";
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { usePrivy, useLogin, useLogout } from "@privy-io/react-auth"
+import { Menu, User } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Logo from "./Logo"
 import { defaultLinks } from "@/config/nav";
-import Logo from "@/components/Logo"
-import { usePrivy } from "@privy-io/react-auth"
 
-export default function Navbar() {
-  const { authenticated, login, logout, user } = usePrivy();
 
-  console.log({ user });
-
+export function Navbar() {
+	const router = useRouter();
+	const pathname = usePathname();
+	const [open, setOpen] = useState(false);
+	const { authenticated, user: privyUser } = usePrivy();
+	
+	const { login } = useLogin({
+    onComplete: ({ isNewUser }) => {
+      if (isNewUser) {
+        router.push("/onboarding");
+      } else {
+        router.push("/dashboard");
+      }
+    },
+  });
   
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+	const { logout } = useLogout({
+    onSuccess: () => {
+      router.push("/login");
+    },
+	});
+	
+	const handleAuth = async () => {
+    if (authenticated) {
+      await logout();
+    } else {
+      try {
+        await login();
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+    }
+  };
+
   return (
-    <div className="border-b mb-4 pb-2 w-full">
-      <nav className="flex justify-between w-full items-center">
-        <div className="flex items-center w-8 h-8">
-          <Logo />
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 hidden md:flex">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <div className="flex items-center w-8 h-8">
+              <Logo />
+            </div>
+          </Link>
         </div>
-        <Button variant="ghost" onClick={() => setOpen(!open)}>
-          <AlignRight />
-        </Button>
-        <Button onClick={() => authenticated ? logout() : login()}>
-          {authenticated ? "Logout" : "Login"}
-        </Button>
-      </nav>
-      {open ? (
-        <div className="my-4 p-4 bg-muted">
-          <ul className="space-y-2">
+        <div className="flex flex-1 items-center justify-end space-x-2 md:justify-center">
+          <nav className="hidden md:flex items-center space-x-6">
             {defaultLinks.map((link) => (
-              <li key={link.title} onClick={() => setOpen(false)} className="">
-                <Link
-                  href={link.href}
-                  className={
-                    pathname === link.href
-                      ? "text-primary hover:text-primary font-semibold"
-                      : "text-muted-foreground hover:text-primary"
-                  }
-                >
-                  {link.title}
-                </Link>
-              </li>
+              <Link
+                key={link.title}
+                href={link.href}
+                className={
+                  pathname === link.href
+                    ? "text-primary hover:text-primary font-semibold"
+                    : "text-muted-foreground hover:text-primary"
+                }
+              >
+                {link.title}
+              </Link>
             ))}
-          </ul>
+          </nav>
         </div>
-      ) : null}
-    </div>
-  );
+        <div className="flex items-center justify-end space-x-2">
+          <nav className="flex items-center space-x-1">
+            {authenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <User className="h-5 w-5" />
+                    <span className="sr-only">Account menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" forceMount>
+                  <DropdownMenuItem>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/settings">Settings</Link>
+                  </DropdownMenuItem>
+                  <Button onClick={handleAuth}>
+                    Log Out
+                  </Button>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button onClick={handleAuth}>
+                Log In
+              </Button>
+            )}
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                >
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <nav className="flex flex-col space-y-4">
+                  {defaultLinks.map((link) => (
+                    <Link
+                      key={link.title}
+                      href={link.href}
+                      className={
+                        pathname === link.href
+                          ? "text-primary hover:text-primary font-semibold"
+                          : "text-muted-foreground hover:text-primary"
+                      }
+                    >
+                      {link.title}
+                    </Link>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </nav>
+        </div>
+      </div>
+    </header>
+  )
 }
+
+export default Navbar;

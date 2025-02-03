@@ -4,11 +4,13 @@ import {
 } from "@/lib/server/trpc"
 import {
   userIdSchema,
+  privyIdSchema,
   insertUserParams,
   updateUserParams,
 } from "@/lib/db/schema/users";
 import {
   getUserById,
+  getUserByPrivyId,
   getUsers
 } from "@/lib/api/users/queries"
 import {
@@ -23,6 +25,9 @@ export const usersRouter = router({
   }),
   getUserById: publicProcedure.input(userIdSchema).query(async ({ input }) => {
     return getUserById(input.id);
+  }),
+  getUserByPrivyId: publicProcedure.input(privyIdSchema).query(async ({ input }) => {
+    return getUserByPrivyId(input.privyId);
   }),
   createUser: publicProcedure
     .input(insertUserParams)
