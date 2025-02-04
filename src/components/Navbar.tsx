@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { usePrivy, useLogin, useLogout } from "@privy-io/react-auth"
+import { usePathname } from "next/navigation"
+import { usePrivy } from "@privy-io/react-auth"
 import { Menu, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -13,26 +13,9 @@ import { defaultLinks } from "@/config/nav";
 
 
 export function Navbar() {
-	const router = useRouter();
 	const pathname = usePathname();
 	const [open, setOpen] = useState(false);
-	const { authenticated, user: privyUser } = usePrivy();
-	
-	const { login } = useLogin({
-    onComplete: ({ isNewUser }) => {
-      if (isNewUser) {
-        router.push("/onboarding");
-      } else {
-        router.push("/dashboard");
-      }
-    },
-  });
-  
-	const { logout } = useLogout({
-    onSuccess: () => {
-      router.push("/login");
-    },
-	});
+	const { authenticated, user: privyUser, login, logout } = usePrivy();
 	
 	const handleAuth = async () => {
     if (authenticated) {
