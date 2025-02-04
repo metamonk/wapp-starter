@@ -33,8 +33,8 @@ const UserOnboard = ({
 
   const { mutate: createUser, isLoading: isCreating } =
     trpc.users.createUser.useMutation({
-      onSuccess: (res) => onSuccess("create"),
-      onError: (err) => onError("create", { error: err.message }),
+      onSuccess: (err: any) => onSuccess("create"),
+      onError: (err: any) => onError("create", { error: err.message }),
     });
 
   const handleClick = () => {
@@ -61,7 +61,7 @@ const UserOnboard = ({
         className="mr-1"
         disabled={isCreating}
       >
-        Continue {isCreating && '...'}
+        Continue
       </Button>
     </div>
   );
